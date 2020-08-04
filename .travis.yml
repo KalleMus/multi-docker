@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t kalle1337/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true kalle1337/react-test npm test
+
+after_success:
+  - docker build -t kalle1337/multi-client ./client
+  - docker build -t kalle1337/multi-nginx ./nginx
+  - docker build -t kalle1337/multi-server ./server
+  - docker build -t kalle1337/multi-worker ./worker
+
+  # login to docker:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push kalle1337/multi-client
+  - docker push kalle1337/multi-nginx
+  - docker push kalle1337/multi-server
+  - docker push kalle1337/multi-worker
+
