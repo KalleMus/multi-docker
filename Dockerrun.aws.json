@@ -1,0 +1,37 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "client",
+            "image": "kalle1337/multi-client",
+            "hostname": "client",
+            "essential": false
+        },
+        {
+            "name": "server",
+            "image": "kalle1337/multi-server",
+            "hostname": "api",
+            "essential": false
+        },
+        {
+            "name": "worker",
+            "image": "kalle1337/multi-worker",
+            "essential": false
+        },
+        {
+            "name": "nginx",
+            "image": "kalle1337/multi-nginx",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": [
+                "client",
+                "server"
+            ]
+        }
+    ]
+}
